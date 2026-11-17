@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои сертификаты</title>
+    <!-- Подключаем красивый жирный шрифт как на картинке -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            /* Глубокий фиолетово-синий градиент как на скриншоте */
+            background: radial-gradient(circle at 50% 45%, #2b265c 0%, #171433 65%, #0e0c21 100%);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Плавающие круги (боке) на заднем фоне */
+        .bokeh-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bokeh {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(138, 155, 255, 0.14) 0%, rgba(138, 155, 255, 0) 70%);
+            animation: float 12s infinite ease-in-out alternate;
+        }
+
+        .bokeh:nth-child(1) { width: 90px; height: 90px; top: 48%; left: 12%; animation-duration: 14s; }
+        .bokeh:nth-child(2) { width: 60px; height: 60px; top: 52%; left: 22%; animation-duration: 10s; }
+        .bokeh:nth-child(3) { width: 110px; height: 110px; top: 45%; right: 10%; animation-duration: 16s; }
+        .bokeh:nth-child(4) { width: 70px; height: 70px; top: 55%; right: 28%; animation-duration: 11s; }
+        .bokeh:nth-child(5) { width: 45px; height: 45px; top: 42%; left: 38%; animation-duration: 9s; }
+        .bokeh:nth-child(6) { width: 80px; height: 80px; top: 60%; left: 65%; animation-duration: 13s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); opacity: 0.6; }
+            100% { transform: translateY(-25px) scale(1.1); opacity: 1; }
+        }
+
+        /* Главная стеклянная карточка-контейнер */
+        .glass-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 960px;
+            background: rgba(58, 53, 108, 0.35);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 45px 35px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45), inset 0 0 30px rgba(125, 145, 255, 0.08);
+            text-align: center;
+        }
+
+        /* Заголовок с градиентом как слово "Привет!" */
+        h1 {
+            font-size: clamp(28px, 5vw, 44px);
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            background: linear-gradient(180deg, #ffffff 15%, #8ba8ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+        }
+
+        /* Светящаяся синяя линия-разделитель */
+        .neon-divider {
+            width: 90px;
+            height: 2px;
+            margin: 24px auto 35px;
+            background: linear-gradient(90deg, transparent, #699bff, transparent);
+            box-shadow: 0 0 12px #5882fa;
+            border-radius: 2px;
+        }
+
+        /* Сетка сертификатов */
+        .certs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            text-align: left;
+        }
+
+        /* Карточка отдельного сертификата */
+        .cert-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cert-card:hover {
+            transform: translateY(-6px);
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(139, 168, 255, 0.4);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 15px rgba(105, 155, 255, 0.15);
+        }
+
+        .cert-card img {
+            width: 100%;
+            height: 185px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .cert-info {
+            padding: 18px;
+        }
+
+        .cert-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #eef2ff;
+            margin-bottom: 6px;
+        }
+
+        .cert-info p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        /* Мелкая подпись снизу как "Но зато здесь красиво ✨" */
+        .footer-note {
+            margin-top: 35px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Модальное окно для просмотра сертификата во весь экран */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 9, 24, 0.88);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 92%;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            font-size: 36px;
+            color: #fff;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фоновые блики -->
+    <div class="bokeh-container">
+        <div class="bokeh"></div>
+        <div class="bokeh"></div>
+        <div class="bokeh"></div>
+        <div class="bokeh"></div>
+        <div class="bokeh"></div>
+        <div class="bokeh"></div>
+    </div>
+
+    <!-- Основной стеклянный блок -->
+    <div class="glass-wrapper">
+        <h1>Мои сертификаты</h1>
+        <p class="subtitle">Подтверждённые навыки, курсы и достижения</p>
+        <div class="neon-divider"></div>
+
+        <div class="certs-grid">
+            <!-- Карточка 1 -->
+            <div class="cert-card" onclick="openModal('images/cert1.jpg')">
+                <img src="images/cert1.jpg" alt="Сертификат 1">
+                <div class="cert-info">
+                    <h3>Веб-разработка и дизайн</h3>
+                    <p>Платформа обучения • 2026</p>
+                </div>
+            </div>
+
+            <!-- Карточка 2 -->
+            <div class="cert-card" onclick="openModal('images/cert2.jpg')">
+                <img src="images/cert2.jpg" alt="Сертификат 2">
+                <div class="cert-info">
+                    <h3>Python для анализа данных</h3>
+                    <p>Онлайн-академия • 2025</p>
+                </div>
+            </div>
+
+            <!-- Карточка 3 -->
+            <div class="cert-card" onclick="openModal('images/cert3.jpg')">
+                <img src="images/cert3.jpg" alt="Сертификат 3">
+                <div class="cert-info">
+                    <h3>Английский язык (Upper-Intermediate)</h3>
+                    <p>Языковой центр • 2025</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">Нажмите на сертификат, чтобы открыть его в полном размере ✨</div>
+    </div>
+
+    <!-- Окно увеличения картинки -->
+    <div class="modal" id="certModal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <img id="modalImg" src="" alt="Увеличенный сертификат">
+    </div>
+
+    <script>
+        function openModal(imageSrc) {
+            document.getElementById('modalImg').src = imageSrc;
+            document.getElementById('certModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('certModal').classList.remove('active');
+        }
+    </script>
+
+</body>
+</html>
